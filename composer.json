@@ -1,0 +1,13 @@
+{
+    "minimum-stability": "dev",
+    "require": {
+        "phalcon/devtools": "^4.2",
+        "phalcon/ide-stubs": "^v4.1.0",
+        "snowair/phalcon-debugbar": "@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    }
+}
