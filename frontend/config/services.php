@@ -13,7 +13,7 @@ $di->setShared('router', function () {
 
 $di->set('dispatcher', function () {
     $dispatcher = new Dispatcher();
-    $dispatcher->setDefaultNamespace('MyApp\Controllers');
+    $dispatcher->setDefaultNamespace('frontend\controllers');
 
     return $dispatcher;
 });

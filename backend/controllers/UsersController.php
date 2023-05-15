@@ -1,6 +1,9 @@
 <?php
 
-namespace MyApp\Controllers;
+namespace backend\controllers;
+
+
+use backend\components\ControllerBase;
 
 class UsersController extends ControllerBase
 {

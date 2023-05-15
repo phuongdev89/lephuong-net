@@ -10,7 +10,6 @@ use Phalcon\Mvc\Application;
  * @var FactoryDefault $di
  */
 try {
-    require __DIR__ . '/../../vendor/autoload.php';
 
     /**
      * Read the configuration
@@ -38,7 +37,6 @@ try {
      * Handle the request
      */
     $application = new Application($di);
-    new Whoops\Provider\Phalcon\WhoopsServiceProvider($di);
 
     $response = $application->handle($_SERVER['REQUEST_URI']);
 

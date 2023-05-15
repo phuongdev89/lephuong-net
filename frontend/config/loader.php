@@ -11,7 +11,8 @@ use Phalcon\Loader;
 $loader
     ->registerNamespaces(
         [
-            'MyApp\Controllers' => __DIR__ . '/../controllers/',
-            'MyApp\Controllers\Admin' => __DIR__ . '/../controllers/admin'
+            'frontend\components' => __DIR__ . '/../components/',
+            'frontend\controllers' => __DIR__ . '/../controllers/',
+            'frontend\controllers\admin' => __DIR__ . '/../controllers/admin'
         ]
     )->register();

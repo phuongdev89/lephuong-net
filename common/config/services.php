@@ -85,7 +85,15 @@ $di->set('session', function () use ($config) {
     $session = new Manager();
     $serializerFactory = new SerializerFactory();
     $factory = new AdapterFactory($serializerFactory);
-    $redis = new RedisAdapter($factory, $config->redis);
+    $redis = new RedisAdapter($factory, [
+        'prefix' => $config->redis->prefix,
+        'host' => $config->redis->host,
+        'port' => $config->redis->port,
+        'index' => $config->redis->index,
+        'persistent' => $config->redis->persistent,
+        'auth' => $config->redis->auth,
+        'socket' => $config->redis->socket
+    ]);
 
     $session
         ->setAdapter($redis)

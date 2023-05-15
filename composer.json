@@ -1,13 +1,26 @@
 {
-    "minimum-stability": "dev",
-    "require": {
-        "phalcon/devtools": "^4.2",
-        "phalcon/ide-stubs": "^v4.1.0",
-        "snowair/phalcon-debugbar": "@dev"
-    },
-    "autoload": {
-        "psr-4": {
-            "App\\": "app/"
-        }
+  "name": "phuongdev89/phalcon-starter-kit",
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=7.4",
+    "ext-phalcon": "^4.1.2",
+    "phalcon/migrations": "*",
+    "phalcon/traits": "*",
+    "phalcon/dd": "*",
+    "phalcon/cli-options-parser": "*",
+    "phalcon-ext/mailer": "*",
+    "sidroberts/phalcon-cron": "*"
+  },
+  "require-dev": {
+    "phalcon/devtools": "^4.2",
+    "phalcon/ide-stubs": "^v4.1.0",
+    "whoops/phalcon": "@dev",
+    "fabfuel/prophiler": "@dev"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
     }
+  ]
 }
