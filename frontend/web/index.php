@@ -2,7 +2,6 @@
 
 error_reporting(E_ALL);
 
-use Phalcon\Config;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Mvc\Application;
 
@@ -15,12 +14,7 @@ try {
     /**
      * Read the configuration
      */
-    $config = new Config(
-        array_merge(
-            require __DIR__ . "/../../common/config/config.php",
-            require __DIR__ . "/../config/config.php"
-        )
-    );
+    $config = require __DIR__ . "/../config/config.php";
 
     /**
      * Read auto-loader

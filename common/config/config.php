@@ -5,8 +5,9 @@ return [
         'adapter' => 'Mysql',
         'host' => 'localhost',
         'username' => 'root',
-        'password' => '',
-        'dbname' => 'test',
+        'password' => 'mysql',
+        'dbname' => 'lephuong_net',
+        'charset'=>'utf8'
     ],
     'redis' => [
         'prefix' => 'sess-reds-',
