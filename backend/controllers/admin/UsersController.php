@@ -3,7 +3,7 @@
 namespace backend\controllers\admin;
 
 
-use backend\components\ControllerBase;
+use backend\bases\ControllerBase;
 
 class UsersController extends ControllerBase
 {

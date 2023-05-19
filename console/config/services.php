@@ -28,9 +28,9 @@ $container->set('db', function () use ($config) {
     );
 });
 
-$container->set('dispatcher', function () {
+$container->set('dispatcher', function () use ($config) {
     $dispatcher = new Dispatcher();
-    $dispatcher->setDefaultNamespace('console\tasks');
+    $dispatcher->setDefaultNamespace($config->defaultNamespace);
 
     return $dispatcher;
 });

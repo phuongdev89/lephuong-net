@@ -10,7 +10,7 @@ use Phalcon\Loader;
 $loader
     ->registerNamespaces(
         [
-            'console\components' => __DIR__ . '/../components/',
+            'console\components' => __DIR__ . '/../bases/',
             'console\tasks' => __DIR__ . '/../tasks/',
             'console\models' => __DIR__ . '/../models/'
         ]
