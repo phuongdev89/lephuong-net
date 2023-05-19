@@ -13,6 +13,7 @@ $loader
         [
             'backend\components' => __DIR__ . '/../components/',
             'backend\controllers' => __DIR__ . '/../controllers/',
-            'backend\controllers\admin' => __DIR__ . '/../controllers/admin'
+            'backend\controllers\admin' => __DIR__ . '/../controllers/admin',
+            'backend\models' => __DIR__ . '/../models/'
         ]
     )->register();
