@@ -16,9 +16,7 @@ require __DIR__ . '/../../vendor/autoload.php';
 /**
  * Read the configuration
  */
-$config = new Config(array_merge(
-    require __DIR__ . "/../../common/config/config.php",
-    require __DIR__ . "/../../common/config/config-local.php",
+$config = new Config(array_merge_recursive(
     require __DIR__ . "/../config/config.php",
     require __DIR__ . "/../config/config-local.php",
 ));

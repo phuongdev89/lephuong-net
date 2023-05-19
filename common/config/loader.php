@@ -10,7 +10,7 @@ $loader = new Loader();
 $loader
     ->registerNamespaces(
         [
-            'common\components' => __DIR__ . '/../components/',
+            'common\bases' => __DIR__ . '/../bases/',
             'common\models' => __DIR__ . '/../models/',
             'common\helpers' => __DIR__ . '/../helpers/',
         ]

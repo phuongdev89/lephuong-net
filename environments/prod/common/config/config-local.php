@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'security' => [
+        'workFactor' => 12,
+        'luggageKey' => ''
+    ],
     'database' => [
         'class' => 'Phalcon\Db\Adapter\Pdo\Mysql',
         'host' => 'localhost',

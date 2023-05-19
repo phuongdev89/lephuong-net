@@ -4,6 +4,7 @@
   "require": {
     "php": ">=7.4",
     "ext-phalcon": "^4.1.2",
+    "ext-psr": "*",
     "phalcon/migrations": "*",
     "phalcon/traits": "*",
     "phalcon/dd": "*",

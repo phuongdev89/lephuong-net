@@ -1,7 +1,6 @@
 <?php
 
 use Phalcon\Config;
-use Phalcon\Db\Adapter\Pdo\Sqlite;
 use Phalcon\DI\FactoryDefault;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 use Phalcon\Mvc\View;
@@ -47,7 +46,7 @@ $di->setShared('view', function () use ($config) {
 
                 $volt->setOptions(
                     [
-                        'path' => $config->application->cacheDir . 'cache/',
+                        'path' => $config->application->storageDir . 'cache/',
                         'separator' => '_',
                         'always' => PHALCON_DEBUG && PHALCON_ENV == 'dev'
                     ]
@@ -67,23 +66,10 @@ $di->setShared('view', function () use ($config) {
  * Database connection is created based in the parameters defined in the configuration file
  */
 $di->set('db', function () use ($config) {
-    if ($config->database->class instanceof Sqlite) {
-        return $config->database->class(
-            [
-                'dbname' => $config->database->dbname,
-            ]
-        );
-    } else {
-        return $config->database->class(
-            [
-                'host' => $config->database->host,
-                'username' => $config->database->username,
-                'password' => $config->database->password,
-                'dbname' => $config->database->dbname,
-                'charset' => $config->database->charset
-            ]
-        );
-    }
+    $options = $config->database->toArray();
+    $class = $options['class'];
+    unset($options['class']);
+    return new $class($options);
 });
 
 /**
@@ -98,33 +84,19 @@ $di->set('modelsMetadata', function () use ($config) {
  */
 $di->set('session', function () use ($config) {
     $session = new Manager();
-    switch ($config->session->class) {
+    $options = $config->session->toArray();
+    $class = $options['class'];
+    unset($options['class']);
+    switch ($class) {
         case Redis::class:
             $serializerFactory = new SerializerFactory();
             $factory = new AdapterFactory($serializerFactory);
-            $adapter = new Redis($factory, [
-                'prefix' => $config->session->prefix,
-                'host' => $config->session->host,
-                'port' => $config->session->port,
-                'index' => $config->session->index,
-                'persistent' => $config->session->persistent,
-                'auth' => $config->session->auth,
-                'socket' => $config->session->socket
-            ]);
+            $adapter = new Redis($factory, $options);
             break;
         case Libmemcached::class:
             $serializerFactory = new SerializerFactory();
             $factory = new AdapterFactory($serializerFactory);
-            $adapter = new Libmemcached($factory, [
-                'client' => $config->session->client,
-                'servers' => [
-                    [
-                        'host' => '127.0.0.1',
-                        'port' => 11211,
-                        'weight' => 0,
-                    ],
-                ],
-            ]);
+            $adapter = new Libmemcached($factory, $options);
             break;
         case Noop::class:
             $adapter = new Noop();
