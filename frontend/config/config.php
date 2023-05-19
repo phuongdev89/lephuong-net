@@ -12,6 +12,7 @@ $config = array_merge(
             'pluginsDir' => __DIR__ . '/../plugins/',
             'libraryDir' => __DIR__ . '/../library/',
             'cacheDir' => __DIR__ . '/../cache/',
+            'migrationsDir' => __DIR__ . '/../../console/migrations/',
             'baseUri' => '/',
         ],
     ]

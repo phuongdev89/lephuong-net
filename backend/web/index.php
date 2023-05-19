@@ -1,8 +1,9 @@
 <?php
 
 error_reporting(E_ALL);
+defined('PHALCON_DEBUG') or define('PHALCON_DEBUG', true);
+defined('PHALCON_ENV') or define('PHALCON_ENV', 'dev');
 
-use Phalcon\Config;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Mvc\Application;
 
@@ -10,16 +11,12 @@ use Phalcon\Mvc\Application;
  * @var FactoryDefault $di
  */
 try {
+    require __DIR__ . '/../../vendor/autoload.php';
 
     /**
      * Read the configuration
      */
-    $config = new Config(
-        array_merge(
-            require __DIR__ . "/../../common/config/config.php",
-            require __DIR__ . "/../config/config.php"
-        )
-    );
+    $config = require __DIR__ . "/../config/config.php";
 
     /**
      * Read auto-loader
@@ -37,6 +34,7 @@ try {
      * Handle the request
      */
     $application = new Application($di);
+    new Whoops\Provider\Phalcon\WhoopsServiceProvider($di);
 
     $response = $application->handle($_SERVER['REQUEST_URI']);
 

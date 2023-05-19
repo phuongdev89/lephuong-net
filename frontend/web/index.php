@@ -1,6 +1,8 @@
 <?php
 
 error_reporting(E_ALL);
+defined('PHALCON_DEBUG') or define('PHALCON_DEBUG', true);
+defined('PHALCON_ENV') or define('PHALCON_ENV', 'dev');
 
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Mvc\Application;

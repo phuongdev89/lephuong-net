@@ -34,6 +34,7 @@ $di->setShared('view', function () use ($config) {
     $view = new View();
 
     $view->setViewsDir($config->application->viewsDir);
+    $view->setLayoutsDir($config->application->viewsDir . 'layouts/');
 
     $view->registerEngines(
         [
@@ -43,7 +44,8 @@ $di->setShared('view', function () use ($config) {
                 $volt->setOptions(
                     [
                         'path' => $config->application->cacheDir,
-                        'separator' => '_'
+                        'separator' => '_',
+                        'always' => PHALCON_DEBUG && PHALCON_ENV == 'dev'
                     ]
                 );
 
