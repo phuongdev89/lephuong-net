@@ -7,6 +7,7 @@ return [
     ],
     'database' => [
         'class' => 'Phalcon\Db\Adapter\Pdo\Mysql',
+        'adapter' => 'Mysql',
         'host' => 'localhost',
         'port' => 3306,
         'username' => 'root',
