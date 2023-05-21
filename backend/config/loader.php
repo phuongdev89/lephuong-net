@@ -16,5 +16,6 @@ $loader
             'backend\models' => __DIR__ . '/../models/',
             'backend\helpers' => __DIR__ . '/../helpers/',
             'backend\widgets' => __DIR__ . '/../widgets/',
+            'backend\plugins' => __DIR__ . '/../plugins/',
         ]
     )->register();

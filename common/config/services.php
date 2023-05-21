@@ -2,6 +2,7 @@
 
 use Phalcon\Config;
 use Phalcon\DI\FactoryDefault;
+use Phalcon\Flash\Direct as FlashDirect;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
@@ -10,7 +11,8 @@ use Phalcon\Session\Adapter\Libmemcached;
 use Phalcon\Session\Adapter\Noop;
 use Phalcon\Session\Adapter\Redis;
 use Phalcon\Session\Adapter\Stream;
-use Phalcon\Session\Manager;
+use Phalcon\Session\Bag;
+use Phalcon\Session\Manager as SessionManager;
 use Phalcon\Storage\AdapterFactory;
 use Phalcon\Storage\SerializerFactory;
 use Phalcon\Url as UrlResolver;
@@ -65,7 +67,7 @@ $di->setShared('view', function () use ($config) {
 /**
  * Database connection is created based in the parameters defined in the configuration file
  */
-$di->set('db', function () use ($config) {
+$di->setShared('db', function () use ($config) {
     $options = $config->database->toArray();
     $class = $options['class'];
     unset($options['class']);
@@ -75,15 +77,18 @@ $di->set('db', function () use ($config) {
 /**
  * If the configuration specify the use of metadata adapter use it or use memory otherwise
  */
-$di->set('modelsMetadata', function () use ($config) {
+$di->setShared('modelsMetadata', function () use ($config) {
     return new MetaDataAdapter();
 });
 
+$di->setShared('sessionBag', function () {
+    return new Bag('bag');
+});
 /**
  * Start the session the first time some component request the session service
  */
-$di->set('session', function () use ($config) {
-    $session = new Manager();
+$di->setShared('session', function () use ($config) {
+    $session = new SessionManager();
     $options = $config->session->toArray();
     $class = $options['class'];
     unset($options['class']);
@@ -111,19 +116,29 @@ $di->set('session', function () use ($config) {
             break;
     }
 
-    $session
-        ->setAdapter($adapter)
-        ->start();
+    $session->setAdapter($adapter);
+    $session->start();
+
+    return $session;
 });
 
-$di->set(
-    'security',
-    function () {
-        $security = new Security();
+$di->setShared('flash', function () {
+    $flash = new FlashDirect();
+    $flash->setImplicitFlush(false);
+    $flash->setCssClasses([
+        'error' => 'alert alert-danger',
+        'success' => 'alert alert-success',
+        'notice' => 'alert alert-info',
+        'warning' => 'alert alert-warning'
+    ]);
 
-        $security->setWorkFactor(12);
+    return $flash;
+});
 
-        return $security;
-    },
-    true
-);
+$di->setShared('security', function () {
+    $security = new Security();
+
+    $security->setWorkFactor(12);
+
+    return $security;
+});

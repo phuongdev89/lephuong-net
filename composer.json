@@ -10,7 +10,8 @@
     "phalcon/dd": "*",
     "phalcon/cli-options-parser": "*",
     "phalcon-ext/mailer": "*",
-    "sidroberts/phalcon-cron": "*"
+    "sidroberts/phalcon-cron": "*",
+    "phalcon/proxy-psr3": "@dev"
   },
   "require-dev": {
     "phalcon/devtools": "^4.2",
