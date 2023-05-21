@@ -1,12 +1,15 @@
 <?php
 
 use Phalcon\Config;
-use Phalcon\Db\Adapter\Pdo\Mysql as DbAdapter;
 use Phalcon\DI\FactoryDefault;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 use Phalcon\Mvc\View;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
-use Phalcon\Session\Adapter\Redis as RedisAdapter;
+use Phalcon\Security;
+use Phalcon\Session\Adapter\Libmemcached;
+use Phalcon\Session\Adapter\Noop;
+use Phalcon\Session\Adapter\Redis;
+use Phalcon\Session\Adapter\Stream;
 use Phalcon\Session\Manager;
 use Phalcon\Storage\AdapterFactory;
 use Phalcon\Storage\SerializerFactory;
@@ -43,7 +46,7 @@ $di->setShared('view', function () use ($config) {
 
                 $volt->setOptions(
                     [
-                        'path' => $config->application->cacheDir,
+                        'path' => $config->application->storageDir . 'cache/',
                         'separator' => '_',
                         'always' => PHALCON_DEBUG && PHALCON_ENV == 'dev'
                     ]
@@ -52,7 +55,7 @@ $di->setShared('view', function () use ($config) {
                 return $volt;
             },
             // Generate Template files uses PHP itself as the template engine
-            '.phtml' => 'Phalcon\Mvc\View\Engine\Php',
+            '.php' => 'Phalcon\Mvc\View\Engine\Php',
         ]
     );
 
@@ -63,14 +66,10 @@ $di->setShared('view', function () use ($config) {
  * Database connection is created based in the parameters defined in the configuration file
  */
 $di->set('db', function () use ($config) {
-    return new DbAdapter(
-        [
-            'host' => $config->database->host,
-            'username' => $config->database->username,
-            'password' => $config->database->password,
-            'dbname' => $config->database->dbname
-        ]
-    );
+    $options = $config->database->toArray();
+    $class = $options['class'];
+    unset($options['class']);
+    return new $class($options);
 });
 
 /**
@@ -85,19 +84,46 @@ $di->set('modelsMetadata', function () use ($config) {
  */
 $di->set('session', function () use ($config) {
     $session = new Manager();
-    $serializerFactory = new SerializerFactory();
-    $factory = new AdapterFactory($serializerFactory);
-    $redis = new RedisAdapter($factory, [
-        'prefix' => $config->redis->prefix,
-        'host' => $config->redis->host,
-        'port' => $config->redis->port,
-        'index' => $config->redis->index,
-        'persistent' => $config->redis->persistent,
-        'auth' => $config->redis->auth,
-        'socket' => $config->redis->socket
-    ]);
+    $options = $config->session->toArray();
+    $class = $options['class'];
+    unset($options['class']);
+    switch ($class) {
+        case Redis::class:
+            $serializerFactory = new SerializerFactory();
+            $factory = new AdapterFactory($serializerFactory);
+            $adapter = new Redis($factory, $options);
+            break;
+        case Libmemcached::class:
+            $serializerFactory = new SerializerFactory();
+            $factory = new AdapterFactory($serializerFactory);
+            $adapter = new Libmemcached($factory, $options);
+            break;
+        case Noop::class:
+            $adapter = new Noop();
+            break;
+        case Stream::class:
+        default:
+            $adapter = new Stream(
+                [
+                    'savePath' => $config->application->storageDir . 'tmp/',
+                ]
+            );
+            break;
+    }
 
     $session
-        ->setAdapter($redis)
+        ->setAdapter($adapter)
         ->start();
 });
+
+$di->set(
+    'security',
+    function () {
+        $security = new Security();
+
+        $security->setWorkFactor(12);
+
+        return $security;
+    },
+    true
+);

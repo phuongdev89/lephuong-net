@@ -2,7 +2,7 @@
 
 namespace frontend\controllers;
 
-use frontend\components\ControllerBase;
+use frontend\bases\ControllerBase;
 
 class UsersController extends ControllerBase
 {
