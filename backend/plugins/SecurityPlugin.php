@@ -13,12 +13,23 @@ use Phalcon\Acl\Adapter\Memory as AclList;
 use Phalcon\Acl\Component;
 use Phalcon\Acl\Enum;
 use Phalcon\Acl\Role;
+use Phalcon\Config;
 use Phalcon\Di\Injectable;
 use Phalcon\Events\Event;
 use Phalcon\Mvc\Dispatcher;
 
+/**
+ * @property Config $config
+ */
 class SecurityPlugin extends Injectable
 {
+    const ROLE_USER = 'Users';
+    const ROLE_GUEST = 'Guests';
+    const ROLE = [
+        self::ROLE_USER => 'Member privileges, granted after sign in.',
+        self::ROLE_GUEST => 'Anyone browsing the site who is not signed in is considered to be a "Guest".'
+    ];
+
     /**
      * This action is executed before execute any action in the application
      *
@@ -28,114 +39,93 @@ class SecurityPlugin extends Injectable
      */
     public function beforeExecuteRoute(Event $event, Dispatcher $dispatcher)
     {
-        $auth = $this->session->get('auth');
-        if (!$auth) {
-            $role = 'Guests';
-        } else {
-            $role = 'Users';
+        $controller = $dispatcher->getActiveController();
+        if (method_exists($controller, 'accessControl')) {
+            $auth = $this->session->get('auth');
+            if (!$auth) {
+                $role = self::ROLE_GUEST;
+            } else {
+                $role = self::ROLE_USER;
+            }
+
+            $controllerName = $dispatcher->getControllerName();
+            $actionName = $dispatcher->getActionName();
+            $acl = $this->getAcl($dispatcher);
+            if (!$acl->isComponent($controllerName)) {
+                $dispatcher->forward([
+                    'controller' => 'error',
+                    'action' => 'show401',
+                ]);
+
+                return false;
+            }
+
+            $allowed = $acl->isAllowed($role, $controllerName, $actionName);
+            if (!$allowed) {
+                $dispatcher->forward([
+                    'controller' => 'security',
+                    'action' => 'login',
+                ]);
+
+                $this->session->destroy();
+
+                return false;
+            }
+
         }
-
-        $controller = $dispatcher->getControllerName();
-        $action = $dispatcher->getActionName();
-
-        $acl = $this->getAcl();
-
-        if (!$acl->isComponent($controller)) {
-            $dispatcher->forward([
-                'controller' => 'errors',
-                'action' => 'show404',
-            ]);
-
-            return false;
-        }
-
-        $allowed = $acl->isAllowed($role, $controller, $action);
-        if (!$allowed) {
-            $dispatcher->forward([
-                'controller' => 'errors',
-                'action' => 'show401',
-            ]);
-
-            $this->session->destroy();
-
-            return false;
-        }
-
         return true;
     }
 
+
     /**
-     * Returns an existing or new access control list
+     * @param $dispatcher
+     * @return   AclList
+     * @author   Phuong Dev <phuongdev89@gmail.com>
+     * @datetime 5/23/2023 12:15 AM
      *
-     * @returns AclList
      */
-    protected function getAcl(): AclList
+    protected function getAcl($dispatcher): AclList
     {
-        if (isset($this->persistent->acl)) {
-            return $this->persistent->acl;
+        $controller = $dispatcher->getActiveController();
+        $controllerName = $dispatcher->getControllerName();
+        $aclRules = $controller->accessControl();
+
+        if ($this->persistent->has('acl')) {
+            $acl = $this->persistent->get('acl');
+        } else {
+            $acl = new AclList();
+            $acl->setDefaultAction(Enum::DENY);
+            foreach (self::ROLE as $role_name => $description) {
+                $role = new Role($role_name, $description);
+                $acl->addRole($role);
+            }
         }
 
-        $acl = new AclList();
-        $acl->setDefaultAction(Enum::DENY);
-
-        // Register roles
-        $roles = [
-            'users' => new Role(
-                'Users',
-                'Member privileges, granted after sign in.'
-            ),
-            'guests' => new Role(
-                'Guests',
-                'Anyone browsing the site who is not signed in is considered to be a "Guest".'
-            )
-        ];
-
-        foreach ($roles as $role) {
-            $acl->addRole($role);
-        }
-
-        //Private area resources
-        $privateResources = [
-            'companies' => ['index', 'search', 'new', 'edit', 'save', 'create', 'delete'],
-            'products' => ['index', 'search', 'new', 'edit', 'save', 'create', 'delete'],
-            'producttypes' => ['index', 'search', 'new', 'edit', 'save', 'create', 'delete'],
-            'invoices' => ['index', 'profile'],
-        ];
-        foreach ($privateResources as $resource => $actions) {
-            $acl->addComponent(new Component($resource), $actions);
-        }
-
-        //Public area resources
-        $publicResources = [
-            'index' => ['index'],
-            'about' => ['index'],
-            'register' => ['index'],
-            'errors' => ['show401', 'show404', 'show500'],
-            'security' => ['index', 'register', 'login', 'end'],
-            'users' => ['index'],
-        ];
-        foreach ($publicResources as $resource => $actions) {
-            $acl->addComponent(new Component($resource), $actions);
-        }
-
-        //Grant access to public areas to both users and guests
-        foreach ($roles as $role) {
-            foreach ($publicResources as $resource => $actions) {
-                foreach ($actions as $action) {
-                    $acl->allow($role->getName(), $resource, $action);
+        $need_add_component = true;
+        if ($acl->getComponents() != null) {
+            foreach ($acl->getComponents() as $component) {
+                if ($component->getName() == $controllerName) {
+                    $need_add_component = false;
+                    break;
                 }
             }
         }
 
-        //Grant access to private area to role Users
-        foreach ($privateResources as $resource => $actions) {
-            foreach ($actions as $action) {
-                $acl->allow('Users', $resource, $action);
+        if ($need_add_component) {
+            $acl->addComponent(new Component($controllerName), array_keys($aclRules));
+            foreach ($aclRules as $action => $type) {
+                if ($type == 'public') {
+                    foreach ($acl->getRoles() as $role) {
+                        $acl->allow($role->getName(), $controllerName, $action);
+                    }
+                } else {
+                    $acl->allow(self::ROLE_USER, $controllerName, $action);
+                }
             }
         }
 
         //The acl is stored in session, APC would be useful here too
-        $this->persistent->acl = $acl;
+        $this->persistent->set('acl', $acl);
 
         return $acl;
     }

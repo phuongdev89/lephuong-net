@@ -13,6 +13,17 @@ use backend\bases\ControllerBase;
 
 class SecurityController extends ControllerBase
 {
+
+    public function accessControl()
+    {
+        return [
+            'index' => 'public',
+            'login' => 'public',
+        ];
+
+    }
+
+
     private function _registerSession($user)
     {
         $this->session->set(

@@ -21,6 +21,10 @@ use Phalcon\Url as UrlResolver;
  * @var Config $config
  */
 $di = new FactoryDefault();
+$di->setShared('config', function () use ($config) {
+    return $config;
+});
+
 /**
  * The URL component is used to generate all kind of urls in the application
  */
