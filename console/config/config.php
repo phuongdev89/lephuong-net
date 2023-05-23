@@ -1,13 +1,13 @@
 <?php
 
 return array_merge_recursive(
-    require __DIR__ . "/../../common/config/config.php",
+    require ROOT_PATH . "/common/config/config.php",
     [
         'defaultNamespace' => 'console\tasks',
         'application' => [
-            'tasksDir' => __DIR__ . '/../tasks/',
-            'modelsDir' => __DIR__ . '/../models/',
-            'storageDir' => __DIR__ . '/../storage/',
+            'tasksDir' => APP_PATH . '/tasks/',
+            'modelsDir' => APP_PATH . '/models/',
+            'storageDir' => APP_PATH . '/storage/',
         ],
     ]
 );

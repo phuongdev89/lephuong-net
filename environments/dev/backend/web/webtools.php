@@ -23,7 +23,7 @@ use Phalcon\DevTools\Bootstrap;
  */
 defined('PTOOLS_IP') || define('PTOOLS_IP', '192.168.');
 defined('BASE_PATH') || define('BASE_PATH', dirname(dirname(__FILE__)));
-defined('APP_PATH') || define('APP_PATH', BASE_PATH);
+defined('ROOT_PATH') || define('ROOT_PATH', BASE_PATH);
 
 /**
  * @const ENV_PRODUCTION Application production stage.

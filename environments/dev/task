@@ -4,35 +4,37 @@
 declare(strict_types=1);
 defined('PHALCON_DEBUG') or define('PHALCON_DEBUG', true);
 defined('PHALCON_ENV') or define('PHALCON_ENV', 'dev');
+defined('ROOT_PATH') or define('ROOT_PATH', __DIR__);
+defined('APP_PATH') or define('APP_PATH', ROOT_PATH . '/console');
 
 use Phalcon\Cli\Console;
 use Phalcon\Config;
-use Phalcon\Di\FactoryDefault\Cli as CliDI;
+use Phalcon\Di\FactoryDefault\Cli;
 use Phalcon\Exception as PhalconException;
 
-require __DIR__ . '/vendor/autoload.php';
+require ROOT_PATH . '/vendor/autoload.php';
 
 /**
  * Read the configuration
  */
 $config = new Config(array_merge(
-    require __DIR__ . "/console/config/config.php",
-    require __DIR__ . "/console/config/config-local.php",
+    require ROOT_PATH . "/console/config/config.php",
+    require ROOT_PATH . "/console/config/config-local.php",
 ));
 
 /**
  * Read auto-loader
  */
-require __DIR__ . '/common/config/loader.php';
-require __DIR__ . '/console/config/loader.php';
+require ROOT_PATH . '/common/config/loader.php';
+require ROOT_PATH . '/console/config/loader.php';
 
 /**
  * Read services
  */
-require __DIR__ . "/console/config/services.php";
+require ROOT_PATH . "/console/config/services.php";
 
 /**
- * @var CliDI $container
+ * @var Cli $container
  */
 $console = new Console($container);
 

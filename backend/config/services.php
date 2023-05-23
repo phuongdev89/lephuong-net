@@ -38,7 +38,7 @@ $di->setShared('dispatcher', function () use ($config) {
 });
 
 $di->set('logger', function () {
-    $adapter = new Stream(__DIR__ . '/../storage/logs/main.log');
+    $adapter = new Stream(APP_PATH . '/storage/logs/main.log');
     return new Logger(
         'messages',
         [

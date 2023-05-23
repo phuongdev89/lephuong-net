@@ -4,14 +4,15 @@ namespace backend\controllers;
 
 
 use backend\bases\ControllerBase;
+use common\helpers\StringHelper;
 
 class IndexController extends ControllerBase
 {
     public function accessControl()
     {
         return [
-            'index' => 'private',
-            'indec' => 'private',
+            'index' => 'public',
+            'indec' => 'public',
         ];
 
     }
@@ -22,5 +23,6 @@ class IndexController extends ControllerBase
 
     public function indexAction()
     {
+        $this->tag->setDefault('email', StringHelper::random());
     }
 }

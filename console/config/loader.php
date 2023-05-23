@@ -9,9 +9,11 @@ use Phalcon\Loader;
 
 $loader
     ->registerNamespaces(
-        [
-            'console\components' => __DIR__ . '/../bases/',
-            'console\tasks' => __DIR__ . '/../tasks/',
-            'console\models' => __DIR__ . '/../models/'
-        ]
+        array_merge_recursive(
+            $loader->getNamespaces(), [
+                'console\components' => APP_PATH . '/bases/',
+                'console\tasks' => APP_PATH . '/tasks/',
+                'console\models' => APP_PATH . '/models/'
+            ]
+        )
     )->register();

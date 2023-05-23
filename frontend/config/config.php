@@ -3,12 +3,12 @@
 return [
     'defaultNamespace' => 'frontend\controllers',
     'application' => [
-        'basesDir' => __DIR__ . '/../bases/',
-        'controllersDir' => __DIR__ . '/../controllers/',
-        'modelsDir' => __DIR__ . '/../models/',
-        'viewsDir' => __DIR__ . '/../views/',
-        'widgetsDir' => __DIR__ . '/../widgets/',
-        'helpersDir' => __DIR__ . '/../helpers/',
-        'storageDir' => __DIR__ . '/../storage/',
+        'basesDir' => APP_PATH . '/bases/',
+        'controllersDir' => APP_PATH . '/controllers/',
+        'modelsDir' => APP_PATH . '/models/',
+        'viewsDir' => APP_PATH . '/views/',
+        'widgetsDir' => APP_PATH . '/widgets/',
+        'helpersDir' => APP_PATH . '/helpers/',
+        'storageDir' => APP_PATH . '/storage/',
     ],
 ];

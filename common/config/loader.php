@@ -10,8 +10,8 @@ $loader = new Loader();
 $loader
     ->registerNamespaces(
         [
-            'common\bases' => __DIR__ . '/../bases/',
-            'common\models' => __DIR__ . '/../models/',
-            'common\helpers' => __DIR__ . '/../helpers/',
+            'common\bases' => ROOT_PATH . '/common/bases/',
+            'common\models' => ROOT_PATH . '/common/models/',
+            'common\helpers' => ROOT_PATH . '/common/helpers/',
         ]
     )->register();

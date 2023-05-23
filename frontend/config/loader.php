@@ -9,11 +9,14 @@ use Phalcon\Loader;
 
 $loader
     ->registerNamespaces(
-        [
-            'frontend\bases' => __DIR__ . '/../bases/',
-            'frontend\controllers' => __DIR__ . '/../controllers/',
-            'frontend\models' => __DIR__ . '/../models/',
-            'frontend\helpers' => __DIR__ . '/../helpers/',
-            'frontend\widgets' => __DIR__ . '/../widgets/',
-        ]
+        array_merge_recursive(
+            $loader->getNamespaces(),
+            [
+                'frontend\bases' => APP_PATH . '/bases/',
+                'frontend\controllers' => APP_PATH . '/controllers/',
+                'frontend\models' => APP_PATH . '/models/',
+                'frontend\helpers' => APP_PATH . '/helpers/',
+                'frontend\widgets' => APP_PATH . '/widgets/',
+            ]
+        )
     )->register();
