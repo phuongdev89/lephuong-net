@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by Le Phuong.
- * @file     NotfoundPlugin.php
- * @project  lephuong-net
- * @author   Phuong Dev <phuongdev89@gmail.com>
- * @datetime 5/22/2023 12:39 AM
- */
 
-namespace backend\plugins;
+namespace common\plugins;
 
 
 use Exception;

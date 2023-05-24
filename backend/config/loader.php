@@ -15,9 +15,9 @@ $loader
                 'backend\bases' => APP_PATH . '/bases/',
                 'backend\controllers' => APP_PATH . '/controllers/',
                 'backend\controllers\admin' => APP_PATH . '/controllers/admin',
-                'backend\models' => APP_PATH . '/models/',
                 'backend\helpers' => APP_PATH . '/helpers/',
-                'backend\widgets' => APP_PATH . '/widgets/',
+                'backend\models' => APP_PATH . '/models/',
                 'backend\plugins' => APP_PATH . '/plugins/',
+                'backend\widgets' => APP_PATH . '/widgets/',
             ])
     )->register();

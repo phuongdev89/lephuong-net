@@ -1,7 +1,7 @@
 <?php
 
-use backend\plugins\NotFoundPlugin;
-use backend\plugins\SecurityPlugin;
+use common\plugins\NotFoundPlugin;
+use common\plugins\SecurityPlugin;
 use Phalcon\Config;
 use Phalcon\Di\FactoryDefault;
 use Phalcon\Events\Manager as EventManager;
@@ -15,7 +15,7 @@ use Phalcon\Mvc\Dispatcher;
  * @var Config $config
  */
 $di->setShared('router', function () {
-    return require __DIR__ . '/routes.php';
+    return require APP_PATH . '/config/routes.php';
 });
 
 $di->setShared('dispatcher', function () use ($config) {

@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 
 use backend\bases\ControllerBase;
+use common\enums\Acl;
 use common\helpers\StringHelper;
 
 class IndexController extends ControllerBase
@@ -11,8 +12,8 @@ class IndexController extends ControllerBase
     public function accessControl()
     {
         return [
-            'index' => 'public',
-            'indec' => 'public',
+            'index' => Acl::PUBLIC,
+            'indec' => Acl::PUBLIC,
         ];
 
     }
