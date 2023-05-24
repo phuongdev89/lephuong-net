@@ -7,12 +7,12 @@ return array_merge_recursive(
         'application' => [
             'basesDir' => APP_PATH . '/bases/',
             'controllersDir' => APP_PATH . '/controllers/',
-            'modelsDir' => APP_PATH . '/models/',
-            'viewsDir' => APP_PATH . '/views/',
-            'pluginsDir' => APP_PATH . '/plugins/',
-            'widgetsDir' => APP_PATH . '/widgets/',
             'helpersDir' => APP_PATH . '/helpers/',
+            'modelsDir' => APP_PATH . '/models/',
+            'pluginsDir' => APP_PATH . '/plugins/',
             'storageDir' => APP_PATH . '/storage/',
+            'viewsDir' => APP_PATH . '/views/',
+            'widgetsDir' => APP_PATH . '/widgets/',
         ],
     ]
 );

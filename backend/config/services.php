@@ -4,7 +4,7 @@ use common\plugins\NotFoundPlugin;
 use common\plugins\SecurityPlugin;
 use Phalcon\Config;
 use Phalcon\Di\FactoryDefault;
-use Phalcon\Events\Manager as EventManager;
+use Phalcon\Events\Manager as ManagerEvent;
 use Phalcon\Logger;
 use Phalcon\Logger\Adapter\Stream;
 use Phalcon\Mvc\Dispatcher;
@@ -19,7 +19,7 @@ $di->setShared('router', function () {
 });
 
 $di->setShared('dispatcher', function () use ($config) {
-    $eventsManager = new EventManager();
+    $eventsManager = new ManagerEvent();
 
     $eventsManager->attach(
         'dispatch:beforeExecuteRoute',
